@@ -1,7 +1,7 @@
 #export ARCH := mips
 #export CROSS_COMPILE :=mips64-octeon-linux-gnu-
 
-TARGET = daq_funcion 
+TARGET = daq_function 
 CC	= gcc
 
 CCFLAGS += -I../include

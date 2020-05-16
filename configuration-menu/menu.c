@@ -54,12 +54,12 @@ void display_code_port(void)
 {
 	cout << endl;
     cout <<"+-----------------------------------+" << endl;
-	cout <<"+       请选择配置项目              + " << endl;
+	cout <<"|       请选择配置项目              |" << endl;
     cout <<"+-----------------------------------+" << endl;
-	cout <<"+                                   +" << endl;
-	cout <<"+       1.配置管理程序端口          +" << endl;
-	cout <<"+       2.数据采集程序端口          +" << endl;
-	cout <<"+       0.返回上级目录              +" << endl;
+	cout <<"|                                   |" << endl;
+	cout <<"|       1.配置管理程序端口          |" << endl;
+	cout <<"|       2.数据采集程序端口          |" << endl;
+	cout <<"|       0.返回上级目录              |" << endl;
     cout <<"+-----------------------------------+" << endl;
 	cout << endl;
 	cout <<"        请输入您的选择:";
@@ -224,7 +224,7 @@ void display_root_menu(void)
 {
     cout << endl;
     cout <<"+-----------------------------------+" << endl;
-    cout <<"|       "LOG_GREEN"系统配置管理"LOG_RESET"                |" << endl;
+    cout <<"|       系统配置管理                |" << endl;
     cout <<"+-----------------------------------+" << endl;
     cout <<"|       1.设置仿真脚本              |" << endl;
     cout <<"|       2.日志查询                  |" << endl;

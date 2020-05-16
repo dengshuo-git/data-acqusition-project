@@ -1,0 +1,16 @@
+tags
+bin/
+./lib
+*.o
+*.order
+*.so
+*.ko
+.*
+Module*
+*mod.c
+daq_function
+log/log
+driver_function_test
+config_menu
+configuration_management
+

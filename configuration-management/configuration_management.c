@@ -58,10 +58,32 @@ static void handle_recv_close(struct saw_fd *fdmap)
 }
 
 
+static void tcp_write(int socket, uint8_t *send_buf, int data_len)
+{
+	uint8_t *data = send_buf;
+	int packet_len = data_len;
+	int nbytes_write = 0;
+
+	while(1){
+		nbytes_write = send(socket, data, packet_len, 0);	
+		printf("nbytes = %d\n",nbytes_write);
+		if(nbytes_write < 0){
+			if((errno == EAGAIN) || (errno == EWOULDBLOCK) || (errno == EINTR)) continue;
+		}
+
+		packet_len = packet_len - nbytes_write;
+		data += nbytes_write;
+
+		if(packet_len == 0) break;
+	}
+
+	return;
+
+}
 /*
  * 网络接收函数，接受网络端来的报文；
  */
-static void tcp_read(struct saw_fd *fdmap,uint8_t *recv_buf)
+static int tcp_read(struct saw_fd *fdmap,uint8_t *recv_buf)
 {
     int ret;
     int socket_fd = fdmap->socket_fd;
@@ -72,29 +94,29 @@ static void tcp_read(struct saw_fd *fdmap,uint8_t *recv_buf)
     ret = recv(socket_fd , (char *)&header, sizeof(struct Header_t), MSG_PEEK);
     if(ret < 0){
         if((errno == EAGAIN) || (errno == EWOULDBLOCK) ||(errno == EINTR)){
-            return;
+            return -1;
         }
 
         printf("Socket(fd = %d) recv error\n", socket_fd);
         handle_recv_close(fdmap);
 
-        return;
+        return -1;
 
     }else if(ret == 0){
 
         printf("Socket(fd = %d) recv close\n", socket_fd);
         handle_recv_close(fdmap);
 
-        return;
+        return -1;
     }else{
 
         if((size_t)ret < offsetof(struct Header_t, frame_len) + sizeof(header.frame_len)){
-            return;
+            return -1;
         }
 
         fdmap->bytes2rd =  header.frame_len;
         if((fdmap->bytes2rd > MAX_MSG_LEN) || (fdmap->bytes2rd < sizeof(struct Header_t))){
-            return;
+            return -1;
         }
 
         fdmap->rdStartByte = 0; 
@@ -108,27 +130,29 @@ static void tcp_read(struct saw_fd *fdmap,uint8_t *recv_buf)
 		ret = recv(socket_fd, buffer + fdmap->rdStartByte, fdmap->bytes2rd, 0);
 		if(ret < 0){
 			if((errno == EAGAIN) || (errno == EWOULDBLOCK) ||(errno == EINTR)){
-				return;
+				return -1;
 			}
 
 			handle_recv_close(fdmap);
 
-			return;
+			return -1;
 		}else if(ret == 0){
+
+            printf("disconncet!\n");
 
 			if(fdmap->bytes2rd != 0){
 				printf("err\n");
-				//     handle_recv_close(fdmap);
+			    handle_recv_close(fdmap);
 
 				/*
 				 * 记录日志
 				 */
 
-				return;
+				return -1;
 			}
 			else{
 				fdmap->flags &= ~SFLAG_RD_PART;
-				return;                        
+				return 0;                        
 			}
 
 		}else{
@@ -141,7 +165,7 @@ static void tcp_read(struct saw_fd *fdmap,uint8_t *recv_buf)
 			printf("recv %d cmd packet!\n", cnt);
 			cnt++;
 
-			return;      
+			return 0;      
 		}
 	}
 }
@@ -242,8 +266,11 @@ int main(void)
 
         }else {
             tmp_fd = ev.data.fd;
-            if(ev.events != EPOLLIN ){
-                printf("unknown epoll event(%x) happened on listen_fd(%d)", ev.events, tmp_fd);
+
+			if(ev.events  & (EPOLLHUP|EPOLLERR)){
+				/*when net-peer close the socket by signal, 
+				  epoll will return both EPOLLIN and (EPOLLHUP|EPOLLERR) */
+                handle_recv_close(&fdmap);
                 continue;              
             }
             if(tmp_fd == listen_fd){
@@ -284,8 +311,11 @@ int main(void)
                  * 从上位机接受命令
                  */
                 tcp_read(&fdmap, recv_buf);
+				if(ret !=0) continue;
 
-                handle_msg(recv_buf, send_buf);
+//                handle_msg(recv_buf, send_buf);
+
+				tcp_write(fdmap.socket_fd, recv_buf, 3012);
 
                 /*
                  * 返回处理结果
@@ -294,9 +324,9 @@ int main(void)
     //            tcp_write(&fdmap, send_buf);
 
 
-            }else{
+			}else{
                  
-                printf("unknown epoll event(%x) happened on fd(%d), the fd is not listen by epoll", ev.events, tmp_fd);
+                //printf("unknown epoll event(%x) happened on fd(%d), the fd is not listen by epoll", ev.events, tmp_fd);
                 continue;
 
             }
