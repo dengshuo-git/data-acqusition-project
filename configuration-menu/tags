@@ -1,0 +1,154 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ACL_PATH	menu.c	79;"	d	file:
+DEBUG	menu.c	36;"	d	file:
+DEBUG_ERR	menu.c	65;"	d	file:
+DEBUG_ERR	menu.c	72;"	d	file:
+DEBUG_IFO	menu.c	68;"	d	file:
+DEBUG_IFO	menu.c	73;"	d	file:
+DEBUG_IIFO	menu.c	63;"	d	file:
+DEBUG_IIFO	menu.c	71;"	d	file:
+DSTIP	menu.c	/^	char DSTIP[64];$/;"	m	struct:acl_config_item	file:
+ENTER_FUNCTION	menu.c	74;"	d	file:
+GetPasswd	menu.c	/^int GetPasswd(char *passwd, int size)$/;"	f
+Get_System_str	menu.c	/^int Get_System_str(const char *cmd,char *pRetMsg, int msg_len){$/;"	f
+IPSEC_MAX_NUM	menu.c	123;"	d	file:
+IsLeapYear	menu.c	/^bool IsLeapYear(int nyear){$/;"	f
+LOCK_SEC	menu.c	83;"	d	file:
+LOG_GREEN	menu.c	41;"	d	file:
+LOG_LIGHTBLUE	menu.c	43;"	d	file:
+LOG_RED	menu.c	44;"	d	file:
+LOG_RESET	menu.c	45;"	d	file:
+LOG_YELLOW	menu.c	42;"	d	file:
+MAX_ACL_ITEM	menu.c	56;"	d	file:
+MAX_LINE	menu.c	57;"	d	file:
+Manage_Dev_ID	menu.c	/^int Manage_Dev_ID = 0;$/;"	v
+NOTE	menu.c	/^	uint32_t NOTE;$/;"	m	struct:acl_config_item	file:
+OL_ALERT	menu.c	49;"	d	file:
+OL_DEBUG	menu.c	52;"	d	file:
+OL_EMERG	menu.c	48;"	d	file:
+OL_INFO	menu.c	51;"	d	file:
+OL_NOTICE	menu.c	50;"	d	file:
+OUT_TIME_OF_LOGIN	menu.c	58;"	d	file:
+PARSE_COMMAND_PATH	menu.c	121;"	d	file:
+PASSWORD_LEN_ERROR	menu.c	54;"	d	file:
+PASSWORD_SECURITY_ERROR	menu.c	55;"	d	file:
+PATH	menu.c	78;"	d	file:
+VERSION	menu.c	37;"	d	file:
+acl	menu.c	/^      struct acl_item *acl;$/;"	m	struct:acl_item_table	typeref:struct:acl_item_table::acl_item	file:
+acl_config_item	menu.c	/^struct acl_config_item{$/;"	s	file:
+acl_itable_t	menu.c	/^}acl_itable_t;$/;"	t	typeref:struct:acl_item_table	file:
+acl_item	menu.c	/^struct acl_item{$/;"	s	file:
+acl_item_table	menu.c	/^typedef struct acl_item_table{$/;"	s	file:
+add_acl_item	menu.c	/^void add_acl_item()$/;"	f
+add_black_list	menu.c	/^void add_black_list()$/;"	f
+audit_manager_login	menu.c	/^int audit_manager_login()$/;"	f
+change_password	menu.c	/^int change_password(unsigned int user_type)$/;"	f
+check_lock_time	menu.c	/^void *check_lock_time(void *)$/;"	f
+check_password_security_safety	menu.c	/^int check_password_security_safety(unsigned char* password,unsigned int password_len)$/;"	f
+check_time_if_legal	menu.c	/^int check_time_if_legal(string strTime)$/;"	f
+choice_which_net_cart	menu.c	/^int choice_which_net_cart()$/;"	f
+command_lock_fd	menu.c	/^int command_lock_fd = -1;$/;"	v
+config_inter_net	menu.c	/^void config_inter_net(void)$/;"	f
+config_manage_net	menu.c	/^void config_manage_net(void)$/;"	f
+config_outer_net	menu.c	/^void config_outer_net(void)$/;"	f
+ctrlc_message	menu.c	/^static void ctrlc_message(int s)$/;"	f	file:
+ctrlz_message	menu.c	/^static void ctrlz_message(int s)$/;"	f	file:
+deal_change_password	menu.c	/^void deal_change_password()$/;"	f
+deal_get_hamc_auth_count	menu.c	/^void deal_get_hamc_auth_count()$/;"	f
+deal_login	menu.c	/^int deal_login(void)$/;"	f
+del_black_list	menu.c	/^void del_black_list()$/;"	f
+delete_acl_item	menu.c	/^void delete_acl_item()$/;"	f
+devid_file	menu.c	/^const char * devid_file = "\/mnt\/solidstorage\/root\/config\/dev_id\/devid";$/;"	v
+display_acl_config_menu	menu.c	/^void display_acl_config_menu(void)$/;"	f
+display_black_list_menu	menu.c	/^void display_black_list_menu(void)$/;"	f
+display_key_info	menu.c	/^void display_key_info(string type)$/;"	f
+display_key_res_info_menu	menu.c	/^void display_key_res_info_menu(void)$/;"	f
+display_login_menu	menu.c	/^void display_login_menu(void)$/;"	f
+display_manager_login_menu	menu.c	/^void display_manager_login_menu()$/;"	f
+display_policy_config_menu	menu.c	/^void display_policy_config_menu(void)$/;"	f
+display_proxy_port	menu.c	/^void display_proxy_port(void)$/;"	f
+display_root_menu	local_config_menu.c	/^void display_root_menu(void)$/;"	f
+display_root_menu	menu.c	/^void display_root_menu(void)$/;"	f
+display_search_info_menu	menu.c	/^void display_search_info_menu(void)$/;"	f
+display_system_config_menu	menu.c	/^void display_system_config_menu(void)$/;"	f
+display_work_info_menu	menu.c	/^void display_work_info_menu(void)$/;"	f
+download_log	menu.c	/^void download_log(void)$/;"	f
+dstdev	menu.c	/^      char  dstdev[16];$/;"	m	struct:acl_item	file:
+dstgw	menu.c	/^      char dstgw[16];\/\/dst ipaddr maskbits$/;"	m	struct:acl_item	file:
+dstip	menu.c	/^      char dstip[16];\/\/dst ipaddr$/;"	m	struct:acl_item	file:
+dstmaskbits	menu.c	/^      int dstmaskbits;\/\/dst ipaddr maskbits$/;"	m	struct:acl_item	file:
+exec_shell_cmd	menu.c	/^static int exec_shell_cmd(  char **argv)$/;"	f	file:
+get_acl_num	menu.c	/^void get_acl_num(int *count)$/;"	f
+get_channel_count	menu.c	/^int get_channel_count()$/;"	f
+get_encap	menu.c	/^string get_encap()$/;"	f
+get_input_value	menu.c	/^int get_input_value(int main_page_flag)$/;"	f
+get_legal_IP	menu.c	/^string get_legal_IP()$/;"	f
+get_legal_gate	menu.c	/^string get_legal_gate(string IP)$/;"	f
+get_legal_gate_and_check	menu.c	/^string get_legal_gate_and_check(string IP,int *mask_data)$/;"	f
+get_legal_mask	menu.c	/^string get_legal_mask()$/;"	f
+get_legal_mask_and_ret	menu.c	/^string get_legal_mask_and_ret(int *mask_ret)$/;"	f
+get_legal_port	menu.c	/^string get_legal_port()$/;"	f
+get_net_config	menu.c	/^int get_net_config()$/;"	f
+get_port	menu.c	/^int get_port()$/;"	f
+get_time_str	menu.c	/^void get_time_str()$/;"	f
+global_print_flag	menu.c	/^int global_print_flag = 0;$/;"	v
+handle_HMAC_switch	menu.c	/^void handle_HMAC_switch(){$/;"	f
+handle_acl_config	menu.c	/^void handle_acl_config(){$/;"	f
+handle_arg	menu.c	/^static void handle_arg(int argc,char *argv[])$/;"	f	file:
+handle_black_list	menu.c	/^void handle_black_list(){$/;"	f
+handle_destroy	menu.c	/^void handle_destroy(){$/;"	f
+handle_local_update_program	menu.c	/^void handle_local_update_program()$/;"	f
+handle_long_rang_program_checking	menu.c	/^void handle_long_rang_program_checking()$/;"	f
+handle_policy_search_config	menu.c	/^void handle_policy_search_config(void)$/;"	f
+handle_proxy_port	menu.c	/^void handle_proxy_port(void)$/;"	f
+handle_search_info	menu.c	/^void handle_search_info(void)$/;"	f
+handle_set_key_dead_time	menu.c	/^void handle_set_key_dead_time(){$/;"	f
+handle_system_config	menu.c	/^void handle_system_config(void)$/;"	f
+idx	menu.c	/^      int idx;$/;"	m	struct:acl_item	file:
+ilock	menu.c	/^int ilock(int *fd)$/;"	f
+ilock_command	menu.c	/^int ilock_command(int *fd)$/;"	f
+inotify_init	menu.c	/^void * inotify_init( void * param)$/;"	f
+iunlock	menu.c	/^int iunlock(int *fd)$/;"	f
+key_res_status_search	menu.c	/^void key_res_status_search(void)$/;"	f
+lock_flag	menu.c	/^int lock_flag = 0;$/;"	v
+lock_time	menu.c	/^unsigned int lock_time = 0;$/;"	v
+login	menu.c	/^int login(unsigned int user_type)\/\/user_type ： 1为管理员  2为安全管理员  3为审计管理员$/;"	f
+main	local_config_menu.c	/^int main(int ac,char *av[])$/;"	f
+main	menu.c	/^int main(int ac,char *av[])$/;"	f
+manager_login	menu.c	/^int manager_login()$/;"	f
+mygetch	menu.c	/^int mygetch()$/;"	f
+note	menu.c	/^      int  note;$/;"	m	struct:acl_item	file:
+num_acls	menu.c	/^      int num_acls;$/;"	m	struct:acl_item_table	file:
+num_mallocbuffs	menu.c	/^      int num_mallocbuffs;$/;"	m	struct:acl_item_table	file:
+parse_file_acl	menu.c	/^struct acl_item_table *parse_file_acl(const char *filename )$/;"	f
+print_help_msg	menu.c	/^static inline void print_help_msg(int argc, char *argv[])$/;"	f	file:
+query_alg_logic_param_version	menu.c	/^void query_alg_logic_param_version()$/;"	f
+query_black_list	menu.c	/^void query_black_list()$/;"	f
+query_dev_online_status	menu.c	/^void query_dev_online_status(void)$/;"	f
+query_dev_status	menu.c	/^void query_dev_status(void)$/;"	f
+query_dev_work_info	menu.c	/^void query_dev_work_info(void)$/;"	f
+query_log	menu.c	/^void query_log(void)$/;"	f
+read_acl_config_file	menu.c	/^void read_acl_config_file(){$/;"	f
+security_manager_login	menu.c	/^int security_manager_login()$/;"	f
+srcdev	menu.c	/^      char  srcdev[16];$/;"	m	struct:acl_item	file:
+srcip	menu.c	/^      char srcip[16];\/\/src ipaddr$/;"	m	struct:acl_item	file:
+srcmaskbits	menu.c	/^      int srcmaskbits;\/\/src ipaddr maskbits$/;"	m	struct:acl_item	file:
+std	menu.c	/^using namespace std;$/;"	v
+tid	menu.c	/^pthread_t   tid;$/;"	v
+time_counter	menu.c	/^unsigned int time_counter = 0;$/;"	v
+time_out_flag	menu.c	/^int time_out_flag = 0;$/;"	v
+time_out_thread	menu.c	/^void *time_out_thread(void *)$/;"	f
+time_out_tid	menu.c	/^pthread_t   time_out_tid;$/;"	v
+update_loongson_alg_logic	menu.c	/^void update_loongson_alg_logic()$/;"	f
+update_loongson_alg_param	menu.c	/^void update_loongson_alg_param()$/;"	f
+user_type_global	menu.c	/^int user_type_global = 0;$/;"	v
+w_space	menu.c	/^static const char *w_space = " \\t\\r\\n,";$/;"	v	file:
+watch_inotify_events	menu.c	/^int watch_inotify_events(int fd)$/;"	f
+write_acl_config	menu.c	/^void write_acl_config(struct acl_config_item *item,int item_num)$/;"	f
+write_acl_config_del	menu.c	/^void write_acl_config_del(struct acl_config_item *item,int item_num)$/;"	f
+write_acl_file	menu.c	/^int write_acl_file(string file_path, struct acl_config_item *item, int item_num)$/;"	f

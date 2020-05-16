@@ -1,0 +1,87 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+DEBUG_LEVEL_DEBUG	debug.h	/^    DEBUG_LEVEL_DEBUG$/;"	e	enum:level
+DEBUG_LEVEL_DISABLE	debug.h	/^    DEBUG_LEVEL_DISABLE = 0,$/;"	e	enum:level
+DEBUG_LEVEL_NOTICE	debug.h	/^    DEBUG_LEVEL_NOTICE,$/;"	e	enum:level
+DEVICE_INFO_ST	driver.h	/^struct DEVICE_INFO_ST{$/;"	s
+DEVICE_NAME	driver.h	10;"	d
+EXTRA_CFLAGS	Makefile	/^EXTRA_CFLAGS  = -Wno-error $/;"	m
+EnterFunction	debug.h	80;"	d
+GET_PHY_ADDR	driver.h	13;"	d
+GREEN	debug.h	18;"	d
+KERNELDIR	Makefile	/^KERNELDIR := \/lib\/modules\/$(shell uname -r)\/build$/;"	m
+LeaveFunction	debug.h	87;"	d
+NODE_SIZE	driver.h	15;"	d
+PURPLE	debug.h	20;"	d
+PWD	Makefile	/^PWD       := $(shell pwd)$/;"	m
+QUEUE_DEPTH	driver.h	14;"	d
+RED	debug.h	21;"	d
+RESET	debug.h	22;"	d
+START_ACQUISITION	driver.h	11;"	d
+STOP_ACQUISITION	driver.h	12;"	d
+YELLOW	debug.h	19;"	d
+_DATA_ACQUISITION_CARD_H__	driver.h	2;"	d
+_DEBUG_H_	debug.h	14;"	d
+__this_module	driver.mod.c	/^__visible struct module __this_module$/;"	v	typeref:struct:module
+__used	driver.mod.c	/^__used$/;"	v	file:
+acquisition_action	driver.c	/^int acquisition_action = STOP_ACQUISITION;  \/\/ 1: 开始采集     2：停止采集$/;"	v
+alert	debug.h	56;"	d
+cdev	driver.h	/^    struct cdev     cdev;$/;"	m	struct:DEVICE_INFO_ST	typeref:struct:DEVICE_INFO_ST::cdev
+channel	driver.h	/^    uint16_t channel;$/;"	m	struct:queues_node
+channel_num	driver.h	/^    uint16_t channel_num;$/;"	m	struct:queues_node
+data	driver.h	/^    uint8_t  data[0];$/;"	m	struct:queues_node
+data_acquisition_dev	driver.c	/^struct DEVICE_INFO_ST *data_acquisition_dev;$/;"	v	typeref:struct:DEVICE_INFO_ST
+data_acquisition_simulation	driver.c	/^int data_acquisition_simulation(void *arg)$/;"	f
+data_queue	driver.h	/^    struct queues data_queue;$/;"	m	struct:DEVICE_INFO_ST	typeref:struct:DEVICE_INFO_ST::queues
+day	driver.h	/^    uint8_t  day;$/;"	m	struct:queues_node
+debug	debug.h	73;"	d
+debug_level	debug.h	/^int debug_level;$/;"	v
+dev_driver_exit	driver.c	/^module_exit(dev_driver_exit);$/;"	v
+dev_driver_exit	driver.c	/^static void __exit dev_driver_exit(void)$/;"	f	file:
+dev_driver_init	driver.c	/^module_init(dev_driver_init);$/;"	v
+dev_driver_init	driver.c	/^static int __init dev_driver_init(void)$/;"	f	file:
+dev_fops	driver.c	/^struct file_operations dev_fops =$/;"	v	typeref:struct:file_operations
+dev_ioctl	driver.c	/^long dev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)$/;"	f
+dev_mmap	driver.c	/^static int dev_mmap(struct file *file, struct vm_area_struct *vma)$/;"	f	file:
+dev_no	driver.h	/^    dev_t    dev_no;$/;"	m	struct:DEVICE_INFO_ST
+dev_open	driver.c	/^int dev_open(struct inode *inode, struct file *filp)$/;"	f
+dev_poll	driver.c	/^unsigned int dev_poll(struct file *filp, poll_table *wait)$/;"	f
+dev_read	driver.c	/^ssize_t dev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)$/;"	f
+dev_release	driver.c	/^int dev_release(struct inode *inode, struct file *filp)$/;"	f
+dev_write	driver.c	/^ssize_t dev_write(struct file * filp,const char __user * buf,size_t count,loff_t * f_pos)$/;"	f
+device	driver.h	/^    struct device   *device;$/;"	m	struct:DEVICE_INFO_ST	typeref:struct:DEVICE_INFO_ST::device
+hour	driver.h	/^    uint8_t  hour;$/;"	m	struct:queues_node
+info	debug.h	61;"	d
+level	debug.h	/^enum level {$/;"	g
+m_sec	driver.h	/^    uint16_t m_sec;$/;"	m	struct:queues_node
+minitue	driver.h	/^    uint8_t  minitue;$/;"	m	struct:queues_node
+month	driver.h	/^    uint8_t  month;$/;"	m	struct:queues_node
+node	driver.h	/^    struct queues_node *node[QUEUE_DEPTH];$/;"	m	struct:queues	typeref:struct:queues::queues_node
+notice	debug.h	66;"	d
+obj-m	Makefile	/^obj-m	:= driver.o$/;"	m
+output	debug.h	25;"	d
+output	debug.h	27;"	d
+packet_len	driver.h	/^    uint32_t packet_len;$/;"	m	struct:queues_node
+packet_type	driver.h	/^    uint16_t packet_type;$/;"	m	struct:queues_node
+point_num	driver.h	/^    uint16_t point_num;$/;"	m	struct:queues_node
+queue_depth	driver.h	/^	uint32_t queue_depth;$/;"	m	struct:queues
+queue_head	driver.h	/^    uint32_t queue_head;$/;"	m	struct:queues
+queue_mutex	driver.h	/^    struct mutex queue_mutex;$/;"	m	struct:queues	typeref:struct:queues::mutex
+queue_tail	driver.h	/^    uint32_t queue_tail;$/;"	m	struct:queues
+queues	driver.h	/^struct queues{$/;"	s
+queues_node	driver.h	/^struct queues_node{$/;"	s
+r_wait	driver.h	/^    wait_queue_head_t r_wait;   \/\/对于接收队列:接收线程使用r_wait,w_wait未使用$/;"	m	struct:queues
+rate	driver.h	/^    uint32_t rate;$/;"	m	struct:queues_node
+resource_cleanup	driver.c	/^static void resource_cleanup(void)$/;"	f	file:
+rsv	driver.h	/^    uint8_t  rsv; $/;"	m	struct:queues_node
+sec	driver.h	/^    uint8_t  sec;$/;"	m	struct:queues_node
+set_debug_level	debug.h	47;"	d
+setup_cdev	driver.c	/^static int setup_cdev(struct DEVICE_INFO_ST *dev_info,dev_t dev_no)$/;"	f	file:
+tag	driver.h	/^	uint32_t tag;        $/;"	m	struct:queues_node
+task	driver.h	/^    struct task_struct *task;$/;"	m	struct:DEVICE_INFO_ST	typeref:struct:DEVICE_INFO_ST::task_struct
+w_wait	driver.h	/^    wait_queue_head_t w_wait;   \/\/对于发送队列:用户线程使用w_wait,发送线程使用r_wait$/;"	m	struct:queues
+year	driver.h	/^    uint16_t year;$/;"	m	struct:queues_node

@@ -1,0 +1,98 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CDTPTL_HEADER	hmac_test.c	/^struct CDTPTL_HEADER$/;"	s	file:
+CDT_RECV_CMD_OP	hmac_test.c	/^struct CDT_RECV_CMD_OP$/;"	s	file:
+CDT_RECV_GL_CMD_OP	hmac_test.c	/^struct CDT_RECV_GL_CMD_OP$/;"	s	file:
+CDT_SEND_CMD_OP	hmac_test.c	/^struct CDT_SEND_CMD_OP$/;"	s	file:
+CDT_SEND_GL_CMD_OP	hmac_test.c	/^struct CDT_SEND_GL_CMD_OP$/;"	s	file:
+DATA_PACKET	hmac_test.c	24;"	d	file:
+DEBUG_HERE	alg_proxy.c	43;"	d	file:
+DEBUG_HERE	alg_proxy.c	45;"	d	file:
+DEBUG_HERE	hmac_test.c	36;"	d	file:
+ECC_SERVER_UNIX_PATH	alg_proxy.c	50;"	d	file:
+EnterFunction	alg_proxy.c	33;"	d	file:
+EnterFunction	alg_proxy.c	46;"	d	file:
+EnterFunction	hmac_test.c	26;"	d	file:
+HmacRecvFunTest	hmac_test.c	/^void HmacRecvFunTest(void)$/;"	f
+HmacSendDataPacketFunTest	hmac_test.c	/^void HmacSendDataPacketFunTest(void)$/;"	f
+HmacSendManagePacketFunTest	hmac_test.c	/^void HmacSendManagePacketFunTest(void)$/;"	f
+IAP	hmac_test.c	/^struct IAP$/;"	s	file:
+LeaveFunction	alg_proxy.c	38;"	d	file:
+LeaveFunction	alg_proxy.c	47;"	d	file:
+LeaveFunction	hmac_test.c	31;"	d	file:
+MANAGE_PACKET	hmac_test.c	23;"	d	file:
+MAXLEN	alg_proxy.c	53;"	d	file:
+MAX_DEAL_PACKET	alg_proxy.c	54;"	d	file:
+QUEUE_INCREASE	alg_proxy.c	/^static int QUEUE_INCREASE(uint16_t *count)$/;"	f	file:
+TRANSFER_SERVER_UNIX_PATH	alg_proxy.c	51;"	d	file:
+__ACQUSITION_STORAGE_REPORT_H__	acqusition_storage_report.h	2;"	d
+__USE_GNU	acqusition_storage_report.c	15;"	d	file:
+__USE_GNU	alg_proxy.c	26;"	d	file:
+__USE_GNU	hmac_test.c	15;"	d	file:
+ack_sn	hmac_test.c	/^      uint32_t ack_sn;$/;"	m	struct:IAP	file:
+acqusition_data_thread	acqusition_storage_report.c	/^static void *acqusition_data_thread(void *arg)$/;"	f	file:
+add_packet_to_send_queue	alg_proxy.c	/^static int add_packet_to_send_queue(struct data_queue_t *pQueue, struct data_packet_t *packet)$/;"	f	file:
+aid	hmac_test.c	/^      uint32_t aid;$/;"	m	struct:IAP	file:
+businessType	hmac_test.c	/^    uint8_t  businessType;  \/\/业务类型$/;"	m	struct:CDTPTL_HEADER	file:
+card_fd	acqusition_storage_report.c	/^int card_fd;$/;"	v
+close_unix_socket	alg_proxy.c	/^static void close_unix_socket(int unix_socket_fd)$/;"	f	file:
+convert	hmac_test.c	/^static int convert(uint8_t *data,uint32_t length)$/;"	f	file:
+couple	alg_proxy.c	/^struct couple_queue_t couple[4];$/;"	v	typeref:struct:couple_queue_t
+create_unix_socket	alg_proxy.c	/^static int create_unix_socket(const char *socket_path)$/;"	f	file:
+data	hmac_test.c	/^    uint8_t     data[0];$/;"	m	struct:CDT_RECV_CMD_OP	file:
+data	hmac_test.c	/^    uint8_t     data[0];$/;"	m	struct:CDT_RECV_GL_CMD_OP	file:
+data	hmac_test.c	/^    uint8_t     data[0];$/;"	m	struct:CDT_SEND_CMD_OP	file:
+data	hmac_test.c	/^    uint8_t     data[0];$/;"	m	struct:CDT_SEND_GL_CMD_OP	file:
+data_deal_thread	acqusition_storage_report.c	/^static void *data_deal_thread(void *arg)$/;"	f	file:
+dest_addr	hmac_test.c	/^      uint32_t dest_addr;$/;"	m	struct:IAP	file:
+dest_port	hmac_test.c	/^      uint16_t dest_port;$/;"	m	struct:IAP	file:
+ecc_in_and_out	alg_proxy.c	/^static void *ecc_in_and_out(void *arg)$/;"	f	file:
+fd	hmac_test.c	/^int fd = 0;$/;"	v
+get_thread_node_in_list	alg_proxy.c	/^static int get_thread_node_in_list(struct couple_queue_t *pCouple,int port,struct thread_node_t **p_node)$/;"	f	file:
+handle_manage_packet	alg_proxy.c	/^static int handle_manage_packet(struct couple_queue_t *pCouple, struct data_packet_t *packet, struct sockaddr_un *cli_addr, int cli_addr_len)$/;"	f	file:
+handle_msg	acqusition_storage_report.c	/^int handle_msg(uint8_t *in_buf, uint8_t *out_buf)$/;"	f
+iap_header	hmac_test.c	/^    struct IAP  iap_header;$/;"	m	struct:CDT_RECV_CMD_OP	typeref:struct:CDT_RECV_CMD_OP::IAP	file:
+iap_header	hmac_test.c	/^    struct IAP  iap_header;$/;"	m	struct:CDT_RECV_GL_CMD_OP	typeref:struct:CDT_RECV_GL_CMD_OP::IAP	file:
+iap_header	hmac_test.c	/^    struct IAP  iap_header;$/;"	m	struct:CDT_SEND_CMD_OP	typeref:struct:CDT_SEND_CMD_OP::IAP	file:
+iap_header	hmac_test.c	/^    struct IAP  iap_header;$/;"	m	struct:CDT_SEND_GL_CMD_OP	typeref:struct:CDT_SEND_GL_CMD_OP::IAP	file:
+init_queue	alg_proxy.c	/^static int init_queue(struct data_queue_t *pQueue)$/;"	f	file:
+init_service	acqusition_storage_report.c	/^static int init_service(void)$/;"	f	file:
+init_service	alg_proxy.c	/^static int init_service(void)$/;"	f	file:
+ky_header	hmac_test.c	/^    struct CDTPTL_HEADER ky_header;$/;"	m	struct:CDT_RECV_CMD_OP	typeref:struct:CDT_RECV_CMD_OP::CDTPTL_HEADER	file:
+ky_header	hmac_test.c	/^    struct CDTPTL_HEADER ky_header;$/;"	m	struct:CDT_SEND_CMD_OP	typeref:struct:CDT_SEND_CMD_OP::CDTPTL_HEADER	file:
+local_fd	hmac_test.c	/^      int32_t local_fd;$/;"	m	struct:IAP	file:
+main	acqusition_storage_report.c	/^int main(void)$/;"	f
+main	alg_proxy.c	/^int main(void)$/;"	f
+main	hmac_test.c	/^int main() $/;"	f
+msgFlag	hmac_test.c	/^    uint8_t  msgFlag;       \/\/报文标志,从高位开始第1位为ACK标识；第2～4位为优先级;第5位为报文响应类型,$/;"	m	struct:CDTPTL_HEADER	file:
+msgNo	hmac_test.c	/^    uint32_t msgNo;       \/\/报文编号$/;"	m	struct:CDTPTL_HEADER	file:
+msgType	hmac_test.c	/^    uint8_t  msgType;       \/\/报文类型$/;"	m	struct:CDTPTL_HEADER	file:
+msglen	hmac_test.c	/^    uint16_t msglen;      \/\/报文长度,协议封装时该字段填0$/;"	m	struct:CDTPTL_HEADER	file:
+op	hmac_test.c	/^      uint8_t op;$/;"	m	struct:IAP	file:
+packAppId	hmac_test.c	/^    uint32_t packAppId;   \/\/组包应用标识$/;"	m	struct:CDTPTL_HEADER	file:
+peer_fd	hmac_test.c	/^      int32_t peer_fd;$/;"	m	struct:IAP	file:
+pkt_oper	hmac_test.c	/^      uint32_t pkt_oper;$/;"	m	struct:IAP	file:
+printuchar	hmac_test.c	/^static void printuchar(unsigned char *buff, int len)$/;"	f	file:
+recvAppId	hmac_test.c	/^    uint32_t recvAppId;   \/\/收方应用标识$/;"	m	struct:CDTPTL_HEADER	file:
+recvNodeId	hmac_test.c	/^    uint32_t recvNodeId;  \/\/收方节点标识$/;"	m	struct:CDTPTL_HEADER	file:
+recv_count	hmac_test.c	/^int recv_count = 0;$/;"	v
+recv_data_from_app	alg_proxy.c	/^static void *recv_data_from_app(void *arg)$/;"	f	file:
+reserved	hmac_test.c	/^    uint8_t  reserved;      \/\/保留$/;"	m	struct:CDTPTL_HEADER	file:
+sem_empty	acqusition_storage_report.c	/^sem_t sem_empty;$/;"	v
+sem_full	acqusition_storage_report.c	/^sem_t sem_full;$/;"	v
+sendAppId	hmac_test.c	/^    uint32_t sendAppId;   \/\/发送应用标识$/;"	m	struct:CDTPTL_HEADER	file:
+sendNodeId	hmac_test.c	/^    uint32_t sendNodeId;  \/\/发方节点标识$/;"	m	struct:CDTPTL_HEADER	file:
+send_data_to_app	alg_proxy.c	/^static void *send_data_to_app(void *arg)$/;"	f	file:
+sig_handle	hmac_test.c	/^void sig_handle(int sign)$/;"	f
+sn	hmac_test.c	/^      uint32_t sn;$/;"	m	struct:IAP	file:
+src_addr	hmac_test.c	/^      uint32_t src_addr;$/;"	m	struct:IAP	file:
+src_port	hmac_test.c	/^      uint16_t src_port;$/;"	m	struct:IAP	file:
+test_recv_count	alg_proxy.c	/^int test_recv_count = 0;$/;"	v
+test_send_count	alg_proxy.c	/^int test_send_count = 0;$/;"	v
+total_len	hmac_test.c	/^      uint16_t total_len;$/;"	m	struct:IAP	file:
+version	hmac_test.c	/^      uint8_t version;$/;"	m	struct:IAP	file:
+version	hmac_test.c	/^    uint16_t version;     \/\/版本号,协议封装时该字段填0$/;"	m	struct:CDTPTL_HEADER	file:
