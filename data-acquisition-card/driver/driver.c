@@ -207,10 +207,10 @@ int data_acquisition_simulation(void *arg)
                         buf[index] = index;
                         index++;
                     }
+                    udelay(utimes);
                 }
 
-//              udelay(utimes);
-                msleep(1000); 
+//                msleep(1000); 
 
 
                 mutex_lock(&queue->queue_mutex);
