@@ -37,6 +37,7 @@
 #include "minIni.h"
 #include "socketfns.h"
 #include "libdaq.h"
+#include "logfns.h"
 
 #define     SFLAG_RD_PART       0x0004
 #define     SFLAG_WR_PART       0x0040
@@ -209,10 +210,10 @@ int main(void)
     /*
      * 解析配置文件
      */
-//    const char config_file[] = "/var/daq/config.ini";
- //   listen_port = ini_getl("General", "CONFIG_MANAGEMENT_TCP_PORT", -1, config_file);
-  //  printf("listen_port = %d\n", listen_port);
-  //
+    const char config_file[] = "/var/daq/config.ini";
+    listen_port = ini_getl("General", "CONFIG_MANAGEMENT_TCP_PORT", -1, config_file);
+    printf("listen_port = %d\n", listen_port);
+  
 
 
     /*
@@ -385,6 +386,8 @@ int handle_msg(uint8_t *in_buf, uint8_t *out_buf)
 
             Tspi_CloseDevice(fd);
 
+            write_log("start daq",sizeof("start_daq")); 
+
             ret = 0;
             break;
 
@@ -415,6 +418,8 @@ int handle_msg(uint8_t *in_buf, uint8_t *out_buf)
             }else{
                 ret = 1;
             }
+
+            write_log("set tcp port",sizeof("set tcp port")); 
 
             break;
 

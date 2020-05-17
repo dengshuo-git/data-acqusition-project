@@ -6,11 +6,11 @@ CC	= gcc
 #OBJS += configuration_management.o minIni.o 
 
 CCFLAGS += -I../include
-LDFLAGS += -L../lib 
+LDFLAGS += -L../lib -lsocket -ldaq -llog
 
 all:$(TARGET)
 $(TARGET):configuration_management.c minIni.c
-	$(CROSS_COMPILE)$(CC) configuration_management.c minIni.c -g -lsocket -ldaq -o  $(TARGET) $(CCFLAGS) $(LDFLAGS) 
+	$(CROSS_COMPILE)$(CC) configuration_management.c minIni.c -g  -o  $(TARGET) $(CCFLAGS) $(LDFLAGS) 
 	cp $(TARGET) ../bin
 	
 clean:

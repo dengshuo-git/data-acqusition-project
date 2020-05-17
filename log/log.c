@@ -68,7 +68,6 @@ int main(void)
         if (err < 0) {
             perror("epoll_wait()");
         }else if (err == 0) {
-            printf("No data input in FIFO within 60 seconds.\n");
         }else {
             nread = ReceiveUDPData(udpfd, recv_buf, MAX_MSG_LEN, (struct sockaddr *)&addr, &addr_len, 0);
             if (nread <= 0) {
@@ -80,9 +79,7 @@ int main(void)
                 write_log_result->result.result = 2;
             }
 
-            printf("recv a msg\n");
             if ((nread >= MSG_HEAD_LEN) && (nread <= MAX_MSG_LEN)) {
-
                 handle_msg(recv_buf, send_buf);
             }
 
@@ -104,7 +101,7 @@ out:
 
 int handle_msg(uint8_t *in_buf, uint8_t *out_buf)
 {
-    char log_file_path[]="/var/daq_log/log.txt";
+    char log_file_path[]="/var/daq/log.txt";
 
     struct Write_Log_t *write_log_cmd = (struct Write_Log_t *)in_buf;
     struct Write_Log_Result_t *write_log_result = (struct Write_Log_Result_t *)out_buf;

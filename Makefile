@@ -9,19 +9,23 @@ all:
 	@cd ./libsocket && make
 	@echo
 	@echo
-	@echo "3)Build acquisition-storage-report"
+	@echo "3)Build liblog"
+	@cd ./liblog && make
+	@echo
+	@echo
+	@echo "4)Build acquisition-storage-report"
 	@cd ./acquisition-storage-report && make
 	@echo
 	@echo
-	@echo "4)Build configuration-management"
+	@echo "5)Build configuration-management"
 	@cd ./configuration-management && make
 	@echo
 	@echo
-	@echo "5)Build configuration-menu"
+	@echo "6)Build configuration-menu"
 	@cd ./configuration-menu && make
 	@echo
 	@echo
-	@echo "6)Build log"
+	@echo "7)Build log"
 	@cd ./log && make
 	@echo
 	@echo
@@ -36,19 +40,27 @@ clean:
 	@cd ./libsocket && make clean
 	@echo
 	@echo
-	@echo "3)Build acquisition-storage-report"
+	@echo "3)Build liblog"
+	@cd ./liblog && make clean
+	@echo
+	@echo
+	@echo "4)Build acquisition-storage-report"
 	@cd ./acquisition-storage-report && make clean
 	@echo
 	@echo
-	@echo "4)Build configuration-management"
+	@echo "5)Build configuration-management"
 	@cd ./configuration-management && make clean
 	@echo
 	@echo
-	@echo "5)Build configuration-menu"
+	@echo "6)Build configuration-menu"
 	@cd ./configuration-menu && make clean
 	@echo
 	@echo
-	@echo "6)Build log"
+	@echo "7)Build log"
 	@cd ./log && make clean
+	@echo
+	@echo
+	@echo "7)Build liblog"
+	@cd ./liblog && make clean
 	@echo
 	@echo
