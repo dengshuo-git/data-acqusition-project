@@ -6,7 +6,7 @@ CC	= gcc
 #OBJS += configuration_management.o minIni.o 
 
 CCFLAGS += -I../include
-LDFLAGS += -L../lib -lsocket -ldaq -llog
+LDFLAGS += -L../lib -lsocket -ldaq -llog -lpthread
 
 all:$(TARGET)
 $(TARGET):configuration_management.c minIni.c

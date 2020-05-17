@@ -43,6 +43,9 @@
 #define     SFLAG_WR_PART       0x0040
 
 int cnt = 0;
+pthread_barrier_t p_barrier;
+struct saw_fd fdmap;
+
 /****************************************************************/
 static int handle_msg(uint8_t *in_buf, uint8_t *out_buf);
 
@@ -67,9 +70,17 @@ static void tcp_write(int socket, uint8_t *send_buf, int data_len)
 
 	while(1){
 		nbytes_write = send(socket, data, packet_len, 0);	
-		printf("nbytes = %d\n",nbytes_write);
 		if(nbytes_write < 0){
 			if((errno == EAGAIN) || (errno == EWOULDBLOCK) || (errno == EINTR)) continue;
+
+            if(fdmap.epfd > 0){
+                struct epoll_event ev;
+                ev.data.fd = fdmap.socket_fd;
+                epoll_ctl(fdmap.epfd, EPOLL_CTL_DEL, fdmap.socket_fd, &ev);
+            }      
+
+            close(fdmap.socket_fd);
+            return;
 		}
 
 		packet_len = packet_len - nbytes_write;
@@ -139,8 +150,6 @@ static int tcp_read(struct saw_fd *fdmap,uint8_t *recv_buf)
 			return -1;
 		}else if(ret == 0){
 
-            printf("disconncet!\n");
-
 			if(fdmap->bytes2rd != 0){
 				printf("err\n");
 			    handle_recv_close(fdmap);
@@ -172,6 +181,104 @@ static int tcp_read(struct saw_fd *fdmap,uint8_t *recv_buf)
 }
 
 
+void* tcp_handle(void* arg)
+{
+	struct epoll_event ev;
+	int err;
+	int epfd;
+
+	int cpu_no = 0;
+	cpu_set_t mask;
+    int tmp_fd;
+
+    int ret;
+
+    uint8_t recv_buf[4096];
+    uint8_t send_buf[4096];
+
+	epfd = epoll_create(10);
+	if(epfd < 0){
+		perror("create epoll fd error");
+		return 0;
+	}
+
+    struct Result_t *result;
+
+	CPU_SET(cpu_no,&mask);
+	if(sched_setaffinity(0,sizeof(mask),&mask) == -1){
+		printf("could not set CPU affinity\n"); 
+		return NULL;
+	}
+
+	pthread_barrier_wait(&p_barrier);
+
+    fdmap.epfd = epfd;
+
+    while( 1 ) {
+        err = epoll_wait(epfd, &ev, 1, 60000);
+        if (err < 0) {
+            perror("epoll_wait()");
+            goto out;
+
+        }else if (err == 0) {
+            printf("No data input in FIFO within 60 seconds.\n");
+
+        }else {
+            tmp_fd = ev.data.fd;
+
+			if(ev.events  & (EPOLLHUP | EPOLLERR)){
+                printf("disconnect!\n");
+				/*when net-peer close the socket by signal, 
+				  epoll will return both EPOLLIN and (EPOLLHUP|EPOLLERR) */
+                handle_recv_close(&fdmap);
+                continue;              
+            }
+
+            if(fdmap.socket_fd == tmp_fd){
+
+				printf("recv a tcp packet\n");
+
+                /* 从上位机接受命令*/
+                ret = tcp_read(&fdmap, recv_buf);
+				if(ret != 0) continue;
+
+                handle_msg(recv_buf, send_buf);
+
+                result = (struct Result_t *)send_buf;
+
+                int i;
+                for(i = 0;i < result->frame_len;i++){
+                    if((i > 0) && (i % 8 == 0)) printf("\n");
+                    printf("0x%2x ", send_buf[i]);
+                }
+                printf("\n");
+
+                /*返回处理结*/
+				tcp_write(fdmap.socket_fd, send_buf, result->frame_len);
+
+			}else{
+                printf("unknown epoll event(%x) happened on fd(%d), the fd is not listen by epoll", ev.events, tmp_fd);
+                continue;
+            }
+        }
+    }
+out:
+
+	err = epoll_ctl(epfd, EPOLL_CTL_DEL, fdmap.socket_fd, &ev);
+	if (err < 0){
+		perror("epoll_ctl()");
+    }
+
+    close(fdmap.socket_fd);
+    close(epfd);
+
+    return 0;
+
+	return NULL;
+}
+
+
+
 int main(void)
 {
     int udpfd;
@@ -194,8 +301,10 @@ int main(void)
     int tmp_fd = 0;
     int newfd = 0;
 
-    struct saw_fd fdmap;
     fdmap.flags = 0;
+
+    int listen_port = 20001;
+	pthread_t ntid;
 
 	CPU_ZERO(&mask);
 	CPU_SET(cpu_no,&mask); 
@@ -205,7 +314,10 @@ int main(void)
 		return 0;
 	}
 
-    int listen_port = 20001;
+	if(pthread_barrier_init(&p_barrier, NULL, 2) != 0){
+		perror("pthread_barrier_init failed");
+		return 0;
+	}
 
     /*
      * 解析配置文件
@@ -244,6 +356,15 @@ int main(void)
 		return 0;
 	}
 
+    /*
+     * 创建TCP处理线程
+     */
+	if(pthread_create(&ntid, NULL, (void *)tcp_handle, NULL)){
+		printf("pthread create thread error.\n");
+		return -1;
+	}
+	pthread_detach(ntid);
+
 	ret = add_fd_epollset(epfd, listen_fd, EPOLLIN);
     if(ret < 0){
         close(listen_fd);
@@ -255,6 +376,8 @@ int main(void)
         close(udpfd);
         return 0;
     }
+
+	pthread_barrier_wait(&p_barrier);
 
     while( 1 ) {
         err = epoll_wait(epfd, &ev, 1, 60000);
@@ -281,7 +404,7 @@ int main(void)
                 if(newfd > 0){
                     printf("add socket epoll_in!\n");
                     fdmap.socket_fd = newfd;
-                    add_fd_epollset(epfd, newfd, EPOLLIN);
+                    add_fd_epollset(fdmap.epfd, newfd, EPOLLIN);
                 }
 
             }else if(udpfd == tmp_fd){
@@ -304,35 +427,10 @@ int main(void)
 
                 sendto(udpfd, (void *)&send_buf, result->frame_len, 0, (struct sockaddr *)&addr, addr_len);
 
-            }else if(newfd == tmp_fd){
-
-				printf("recv a tcp packet\n");
-
-                /*
-                 * 从上位机接受命令
-                 */
-                tcp_read(&fdmap, recv_buf);
-				if(ret !=0) continue;
-
-//                handle_msg(recv_buf, send_buf);
-
-				tcp_write(fdmap.socket_fd, recv_buf, 3012);
-
-                /*
-                 * 返回处理结果
-                 */
-
-    //            tcp_write(&fdmap, send_buf);
-
-
-			}else{
-                 
-                //printf("unknown epoll event(%x) happened on fd(%d), the fd is not listen by epoll", ev.events, tmp_fd);
+            }else{
+                printf("unknown epoll event(%x) happened on fd(%d), the fd is not listen by epoll", ev.events, tmp_fd);
                 continue;
-
             }
-
-
         }
     }
 
@@ -362,6 +460,9 @@ int handle_msg(uint8_t *in_buf, uint8_t *out_buf)
 
     struct Set_Tcp_Port_t *set_port = (struct Set_Tcp_Port_t *)in_buf;
     struct Start_Daq_t *start_daq_op = (struct Start_Daq_t *)in_buf;
+
+    struct Heart_Beat_t   *heart_beat = (struct Heart_Beat_t*)in_buf;
+    struct Heart_Result_t *heart_ret = (struct Heart_Result_t*)out_buf;
 
     int ret;
     int fd;
@@ -420,6 +521,20 @@ int handle_msg(uint8_t *in_buf, uint8_t *out_buf)
             }
 
             write_log("set tcp port",sizeof("set tcp port")); 
+
+            break;
+
+        case HEARTBEAT:            
+            if(heart_beat->ask = 0x1234){
+                printf("recv a heart!\n");
+                heart_ret->result.tag = header->tag;
+                heart_ret->result.frame_len = sizeof(struct Heart_Result_t); 
+                heart_ret->result.cmd = header->cmd;
+                heart_ret->result.result = 0; 
+                heart_ret->answer = 0x5678;
+                return 0;
+            }
+            ret = 1;
 
             break;
 
