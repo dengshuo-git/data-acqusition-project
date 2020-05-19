@@ -692,7 +692,7 @@ int accept_new_connect(int listenfd)
 	nolinger.l_linger = 0;
 	setsockopt(newfd, SOL_SOCKET, SO_LINGER, (struct linger *) &nolinger, sizeof(struct linger));
 
-	int lowat = 32;
+	int lowat = 8;
 	setsockopt(newfd, SOL_SOCKET, SO_RCVLOWAT, &lowat, sizeof(lowat));
 
 	struct sockaddr_in local_addr;
