@@ -38,11 +38,11 @@
 #include "socketfns.h"
 #include "libdaq.h"
 #include "logfns.h"
+#include "debug.h"
 
 #define     SFLAG_RD_PART       0x0004
 #define     SFLAG_WR_PART       0x0040
 
-int cnt = 0;
 pthread_barrier_t p_barrier;
 struct saw_fd fdmap;
 
@@ -136,8 +136,6 @@ static int tcp_read(struct saw_fd *fdmap,uint8_t *recv_buf)
 
     }
 
-
-//    printf("fdmap->bytes2rd = %d\n", fdmap->bytes2rd);
 	while(1){
 		ret = recv(socket_fd, buffer + fdmap->rdStartByte, fdmap->bytes2rd, 0);
 		if(ret < 0){
@@ -172,8 +170,6 @@ static int tcp_read(struct saw_fd *fdmap,uint8_t *recv_buf)
 
 		if( fdmap->bytes2rd == 0){
 			fdmap->flags &= ~SFLAG_RD_PART;
-			printf("recv %d cmd packet!\n", cnt);
-			cnt++;
 
 			return 0;      
 		}
@@ -236,8 +232,6 @@ void* tcp_handle(void* arg)
 
             if(fdmap.socket_fd == tmp_fd){
 
-				printf("recv a tcp packet\n");
-
                 /* 从上位机接受命令*/
                 ret = tcp_read(&fdmap, recv_buf);
 				if(ret != 0) continue;
@@ -245,13 +239,6 @@ void* tcp_handle(void* arg)
                 handle_msg(recv_buf, send_buf);
 
                 result = (struct Result_t *)send_buf;
-
-                int i;
-                for(i = 0;i < result->frame_len;i++){
-                    if((i > 0) && (i % 8 == 0)) printf("\n");
-                    printf("0x%2x ", send_buf[i]);
-                }
-                printf("\n");
 
                 /*返回处理结*/
 				tcp_write(fdmap.socket_fd, send_buf, result->frame_len);
@@ -319,14 +306,14 @@ int main(void)
 		return 0;
 	}
 
+    /* 设置调试级别 */
+    set_debug_level(DEBUG_LEVEL_DEBUG);
+
     /*
      * 解析配置文件
      */
     const char config_file[] = "/var/daq/config.ini";
     listen_port = ini_getl("General", "CONFIG_MANAGEMENT_TCP_PORT", -1, config_file);
-    printf("listen_port = %d\n", listen_port);
-  
-
 
     /*
      * 监听UDP套接字
@@ -398,11 +385,8 @@ int main(void)
                 continue;              
             }
             if(tmp_fd == listen_fd){
-                printf("recv clinet connect!\n");
                 newfd = accept_new_connect(listen_fd);
-                printf("newfd = %d\n", newfd);
                 if(newfd > 0){
-                    printf("add socket epoll_in!\n");
                     fdmap.socket_fd = newfd;
                     add_fd_epollset(fdmap.epfd, newfd, EPOLLIN);
                 }
@@ -472,8 +456,6 @@ int handle_msg(uint8_t *in_buf, uint8_t *out_buf)
     switch(header->cmd){
         case START_DAQ:
 
-            printf("start daq!\n");
-
             fd = Tspi_OpenDevice();
             if(fd < 0){		
                 printf("open failed!\n");
@@ -488,6 +470,8 @@ int handle_msg(uint8_t *in_buf, uint8_t *out_buf)
             Tspi_CloseDevice(fd);
 
             write_log("start daq",sizeof("start_daq")); 
+
+            debug("启动采集\n");
 
             ret = 0;
             break;
@@ -504,6 +488,8 @@ int handle_msg(uint8_t *in_buf, uint8_t *out_buf)
             stop_daq(fd);                 
 
             Tspi_CloseDevice(fd);
+
+            debug("停止采集\n");
             
             ret = 0;
             break;
@@ -526,7 +512,9 @@ int handle_msg(uint8_t *in_buf, uint8_t *out_buf)
 
         case HEARTBEAT:            
             if(heart_beat->ask = 0x1234){
-                printf("recv a heart!\n");
+
+                debug("接收到心跳请求!\n");
+
                 heart_ret->result.tag = header->tag;
                 heart_ret->result.frame_len = sizeof(struct Heart_Result_t); 
                 heart_ret->result.cmd = header->cmd;

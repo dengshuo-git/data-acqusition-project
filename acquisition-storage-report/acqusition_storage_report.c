@@ -173,19 +173,19 @@ static void *data_deal_thread(void *arg)
 
         if(packet_len > MAX_MSG_LEN) continue; 
 
-#if 0        
+#if 1        
         while(1){
 
             nbytes_write = send(daq_socket_fd, data, packet_len, 0);
-            if(nbytes_write < 0){
+			if(nbytes_write < 0){
+				if((errno == EAGAIN) || (errno == EWOULDBLOCK) || (errno == EINTR)) continue;
 
                 /*
                  * 记录日志
                  */
-
+                write_log("send daq data error!\n", sizeof(send daq data error!\n"));
                 break;
-
-            }
+			}
             
             packet_len -= nbytes_write; 
             data = data + nbytes_write;
