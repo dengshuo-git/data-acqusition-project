@@ -31,6 +31,10 @@ all:
 	@cd ./log && make
 	@echo
 	@echo
+	@echo "8)Build tcp-menu"
+	@cd ./tcp-menu && make
+	@echo
+	@echo
 clean:
 	@rm -fr ./lib
 	@rm -fr ./bin
@@ -64,5 +68,9 @@ clean:
 	@echo
 	@echo "7)Build liblog"
 	@cd ./liblog && make clean
+	@echo
+	@echo
+	@echo "8)Build tcp-menu"
+	@cd ./tcp-menu && make clean
 	@echo
 	@echo
