@@ -59,7 +59,6 @@ int net_recv(int socket, uint8_t *buf, uint32_t *len)
             goto out;
 
         }else if (err == 0) {
-            printf("No data input in FIFO within 60 seconds.\n");
 
         }else {
             tmp_fd = ev.data.fd;
@@ -169,8 +168,10 @@ int main(int argc, char*argv[])
     uint8_t send_buf[4096];
 
     struct Header_t *header = (struct Header_t *)send_buf;
-    struct Heart_Beat_t *heart = (struct Heart_Beat_t*)send_buf;
     struct Heart_Result_t *result;
+
+    struct Heart_Beat_t *heart = (struct Heart_Beat_t*)send_buf;
+    struct Heart_Result_t *heart_result;
 
 
     s = socket(AF_INET, SOCK_STREAM, 0);
@@ -292,6 +293,27 @@ int main(int argc, char*argv[])
                 }else{
                     cout << "启动采集失败!" << endl;
                     cout << endl;
+                }
+
+            case 3: //心跳功能测试
+
+                for(i = 0;i < 20;i++){
+                    heart->header.tag        = TAG;
+                    heart->header.frame_len  = sizeof(struct Heart_Beat_t); 
+                    heart->header.cmd        = HEARTBEAT; 
+                    heart->ask               = 0x1234; 
+
+                    tcp_write(s, send_buf, heart->header.frame_len, 0);
+
+                    net_recv(s, recv_buf, &recv_len);
+
+                    heart_result = (struct Heart_Result_t *)recv_buf;
+                    if(heart_result->answer == 0x5678){
+                        printf("recv a reply!\n");
+                    }else{
+                        printf("recv a error reply!,answer = %x\n", result->answer);
+                    }
+                    sleep(1);
                 }
 
                 break;

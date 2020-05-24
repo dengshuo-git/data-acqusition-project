@@ -7,7 +7,7 @@ CC	= g++
 all:$(TARGET)
 $(TARGET):tcp_client.c
 	$(CROSS_COMPILE)$(CC) tcp_client.c  -lsocket -g  -o $(TARGET) -I../include -L../lib 
-	
+	cp $(TARGET) ../bin	
 clean:
 	rm -rf *.o  $(TARGET)
 

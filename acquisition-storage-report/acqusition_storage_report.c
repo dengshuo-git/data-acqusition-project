@@ -337,7 +337,6 @@ int main(void)
             goto out;
 
         }else if (err == 0) {
-            printf("No data input in FIFO within 60 seconds.\n");
 
         }else {
             tmp_fd = ev.data.fd;
@@ -346,31 +345,12 @@ int main(void)
                 continue;;              
             }
             if(tmp_fd == listen_fd){
-                printf("recv clinet connect!\n");
                 newfd = accept_new_connect(listen_fd);
-                printf("newfd = %d\n", newfd);
                 if(newfd > 0){
                     printf("recv clinet connect!\n");
                     daq_socket_fd = newfd;
                     add_fd_epollset(epfd, newfd, EPOLLIN);
                 }
-
-            }else if(udpfd == tmp_fd){
-#if 0
-                nread = ReceiveUDPData(udpfd, recv_buf, MAX_MSG_LEN, (struct sockaddr *)&addr, &addr_len, 0);
-                if (nread <= 0) {
-                    printf("Recvice Data Error!\n");
-                    continue;
-                }
-
-                if ((nread < MSG_HEAD_LEN) && (nread > MAX_MSG_LEN)) {
-                    continue;
-                }
-
-                handle_msg(recv_buf, send_buf);
-                struct Result_t *result = (struct Result_t *)send_buf;
-                sendto(udpfd, (void *)&send_buf, result->frame_len, 0, (struct sockaddr *)&addr, addr_len);
-#endif                
 
             }else if(newfd == tmp_fd){ //只处理上位机建联操作
 

@@ -159,6 +159,10 @@ int data_acquisition_simulation(void *arg)
 {
     int i;
     int j;
+    int k;
+
+    int mcnt = 0;
+    int ucnt = 0;
 
     struct DEVICE_INFO_ST *this = data_acquisition_dev; 
     struct queues *queue = &this->data_queue; 
@@ -207,11 +211,18 @@ int data_acquisition_simulation(void *arg)
                         buf[index] = index;
                         index++;
                     }
-                    udelay(utimes);
+
+                    mcnt = utimes / 1000;
+                    for(k = 0; k < mcnt; k++){
+                        msleep(1);
+                    }
+
+                    ucnt = (utimes - mcnt * 1000);;
+                    for(k = 0; k < ucnt; k++){
+                        udelay(1);
+                    }
+
                 }
-
-//                msleep(1000); 
-
 
                 mutex_lock(&queue->queue_mutex);
                 queue->queue_head = (queue->queue_head + 1) % QUEUE_DEPTH;
@@ -220,7 +231,6 @@ int data_acquisition_simulation(void *arg)
                 wake_up_interruptible(&(queue->r_wait));
 
             }else{
-                
 
                 __set_current_state(TASK_INTERRUPTIBLE);
                 schedule();
