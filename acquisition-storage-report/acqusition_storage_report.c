@@ -37,6 +37,7 @@
 #include "minIni.h"
 #include "socketfns.h"
 #include "libdaq.h"
+#include "logfns.h"
 
 
 sem_t sem_full;
@@ -46,6 +47,8 @@ int storage_flag = 0; // 0: 采集数据不存储  1：采集数据存储在数�
 int daq_socket_fd = 0; 
 
 uint8_t daq_data[QUEUE_DEPTH][4096] = {0};
+
+int send_daq_cnt = 0;
 
 /****************************************************************/
 static int handle_msg(uint8_t *in_buf, uint8_t *out_buf);
@@ -115,8 +118,7 @@ static void *acqusition_data_thread(void *arg)
                     continue;
                 }	   
 
-                printf("recv a daq packet!\n");
-                
+            //    printf("recv a daq packet!\n");
             //    fill_packet_header(card_fd, data);
                 
                 queue_head = (queue_head + 1) % QUEUE_DEPTH;
@@ -173,7 +175,7 @@ static void *data_deal_thread(void *arg)
 
         if(packet_len > MAX_MSG_LEN) continue; 
 
-#if 1        
+#if 0        
         while(1){
 
             nbytes_write = send(daq_socket_fd, data, packet_len, 0);
@@ -183,7 +185,7 @@ static void *data_deal_thread(void *arg)
                 /*
                  * 记录日志
                  */
-                write_log("send daq data error!\n", sizeof(send daq data error!\n"));
+                write_log("send daq data error!\n", sizeof("send daq data error!\n"));
                 break;
 			}
             
@@ -196,7 +198,10 @@ static void *data_deal_thread(void *arg)
         }
 #endif        
         
-        printf("send a daq data via net\n");
+        send_daq_cnt++;
+        if(send_daq_cnt % 1000 == 0){
+            printf("send %d daq data via net\n", send_daq_cnt);
+        }
 
         queue_tail = (queue_tail + 1) % QUEUE_DEPTH;
 

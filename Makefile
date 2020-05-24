@@ -1,4 +1,6 @@
 all:
+	@rm -fr ./lib
+	@rm -fr ./bin
 	@mkdir ./lib
 	@mkdir ./bin
 	@echo "1)Bulid data-acquisition-card" 

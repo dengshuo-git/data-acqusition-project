@@ -13,9 +13,6 @@
 #include <strings.h>
 #include <signal.h>
 
-#define     SFLAG_RD_PART       0x0004
-#define     SFLAG_WR_PART       0x0040
-
 #define TAG                 0x1234
 
 #define QUEUE_DEPTH         0x8

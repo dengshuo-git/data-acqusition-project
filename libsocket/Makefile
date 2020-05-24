@@ -2,7 +2,7 @@
 #export CROSS_COMPILE :=mips64-octeon-linux-gnu-
 CC=gcc
 LDFLAGS+=-L./
-CFLAGS+=-I./
+CFLAGS+=-I./ -I../include
 libsocket.so:socket.o socketfns.h 
 	$(CROSS_COMPILE)$(CC) -shared socket.o -lc -lrt -g -o libsocket.so $(CFLAGS)
 	cp libsocket.so ../lib	

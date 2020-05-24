@@ -8,6 +8,7 @@ bin/
 .*
 Module*
 *mod.c
+*.mod
 daq_function
 log/log
 driver_function_test

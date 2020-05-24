@@ -40,8 +40,6 @@
 #include "logfns.h"
 #include "debug.h"
 
-#define     SFLAG_RD_PART       0x0004
-#define     SFLAG_WR_PART       0x0040
 
 pthread_barrier_t p_barrier;
 struct saw_fd fdmap;
@@ -49,15 +47,16 @@ struct saw_fd fdmap;
 /****************************************************************/
 static int handle_msg(uint8_t *in_buf, uint8_t *out_buf);
 
-static void handle_recv_close(struct saw_fd *fdmap)
+#if 0
+static void handle_close(int socket_fd, int epfd)
 {      
-	if(fdmap->epfd > 0){
+	if(epfd > 0){
         struct epoll_event ev;
-        ev.data.fd = fdmap->socket_fd;
-        epoll_ctl(fdmap->epfd, EPOLL_CTL_DEL, fdmap->socket_fd, &ev);
+        ev.data.fd = socket_fd;
+        epoll_ctl(epfd, EPOLL_CTL_DEL, socket_fd, &ev);
 	}      
 
-	close(fdmap->socket_fd);
+	close(socket_fd);
 	return;
 }
 
@@ -73,13 +72,8 @@ static void tcp_write(int socket, uint8_t *send_buf, int data_len)
 		if(nbytes_write < 0){
 			if((errno == EAGAIN) || (errno == EWOULDBLOCK) || (errno == EINTR)) continue;
 
-            if(fdmap.epfd > 0){
-                struct epoll_event ev;
-                ev.data.fd = fdmap.socket_fd;
-                epoll_ctl(fdmap.epfd, EPOLL_CTL_DEL, fdmap.socket_fd, &ev);
-            }      
+            handle_close(socket, fdmap.epfd);
 
-            close(fdmap.socket_fd);
             return;
 		}
 
@@ -95,13 +89,15 @@ static void tcp_write(int socket, uint8_t *send_buf, int data_len)
 /*
  * 网络接收函数，接受网络端来的报文；
  */
-static int tcp_read(struct saw_fd *fdmap,uint8_t *recv_buf)
+static int tcp_read(int socket_fd, uint8_t *recv_buf, int *flags)
 {
     int ret;
-    int socket_fd = fdmap->socket_fd;
     struct Header_t header;
     char *buffer = recv_buf;
 	struct epoll_event ev;
+
+    int rdStartByte = 0; 
+    int bytes2rd = 0; 
 
     ret = recv(socket_fd , (char *)&header, sizeof(struct Header_t), MSG_PEEK);
     if(ret < 0){
@@ -110,14 +106,14 @@ static int tcp_read(struct saw_fd *fdmap,uint8_t *recv_buf)
         }
 
         printf("Socket(fd = %d) recv error\n", socket_fd);
-        handle_recv_close(fdmap);
+        handle_close(socket_fd, fdmap.epfd);
 
         return -1;
 
     }else if(ret == 0){
 
         printf("Socket(fd = %d) recv close\n", socket_fd);
-        handle_recv_close(fdmap);
+        handle_close(socket_fd, fdmap.epfd);
 
         return -1;
     }else{
@@ -126,31 +122,31 @@ static int tcp_read(struct saw_fd *fdmap,uint8_t *recv_buf)
             return -1;
         }
 
-        fdmap->bytes2rd =  header.frame_len;
-        if((fdmap->bytes2rd > MAX_MSG_LEN) || (fdmap->bytes2rd < sizeof(struct Header_t))){
+        bytes2rd =  header.frame_len;
+        if((bytes2rd > MAX_MSG_LEN) || (bytes2rd < sizeof(struct Header_t))){
             return -1;
         }
 
-        fdmap->rdStartByte = 0; 
-        fdmap->flags |= SFLAG_RD_PART;
+        rdStartByte = 0; 
+        *flags |= SFLAG_RD_PART;
 
     }
 
 	while(1){
-		ret = recv(socket_fd, buffer + fdmap->rdStartByte, fdmap->bytes2rd, 0);
+		ret = recv(socket_fd, buffer + rdStartByte, bytes2rd, 0);
 		if(ret < 0){
 			if((errno == EAGAIN) || (errno == EWOULDBLOCK) ||(errno == EINTR)){
 				return -1;
 			}
 
-			handle_recv_close(fdmap);
+			handle_close(socket_fd, fdmap.epfd);
 
 			return -1;
 		}else if(ret == 0){
 
-			if(fdmap->bytes2rd != 0){
+			if(bytes2rd != 0){
 				printf("err\n");
-			    handle_recv_close(fdmap);
+			    handle_close(socket_fd, fdmap.epfd);
 
 				/*
 				 * 记录日志
@@ -159,22 +155,23 @@ static int tcp_read(struct saw_fd *fdmap,uint8_t *recv_buf)
 				return -1;
 			}
 			else{
-				fdmap->flags &= ~SFLAG_RD_PART;
+				*flags &= ~SFLAG_RD_PART;
 				return 0;                        
 			}
 
 		}else{
-			fdmap->rdStartByte += ret;
-			fdmap->bytes2rd -= ret;
+			rdStartByte += ret;
+			bytes2rd -= ret;
 		}
 
-		if( fdmap->bytes2rd == 0){
-			fdmap->flags &= ~SFLAG_RD_PART;
+		if( bytes2rd == 0){
+			*flags &= ~SFLAG_RD_PART;
 
 			return 0;      
 		}
 	}
 }
+#endif
 
 
 void* tcp_handle(void* arg)
@@ -226,14 +223,14 @@ void* tcp_handle(void* arg)
                 printf("disconnect!\n");
 				/*when net-peer close the socket by signal, 
 				  epoll will return both EPOLLIN and (EPOLLHUP|EPOLLERR) */
-                handle_recv_close(&fdmap);
+                handle_close(tmp_fd, epfd);
                 continue;              
             }
 
             if(fdmap.socket_fd == tmp_fd){
 
                 /* 从上位机接受命令*/
-                ret = tcp_read(&fdmap, recv_buf);
+                ret = tcp_read(fdmap.socket_fd, recv_buf, &fdmap.flags, fdmap.epfd);
 				if(ret != 0) continue;
 
                 handle_msg(recv_buf, send_buf);
@@ -241,7 +238,7 @@ void* tcp_handle(void* arg)
                 result = (struct Result_t *)send_buf;
 
                 /*返回处理结*/
-				tcp_write(fdmap.socket_fd, send_buf, result->frame_len);
+				tcp_write(fdmap.socket_fd, send_buf, result->frame_len, fdmap.epfd);
 
 			}else{
                 printf("unknown epoll event(%x) happened on fd(%d), the fd is not listen by epoll", ev.events, tmp_fd);
@@ -290,7 +287,7 @@ int main(void)
 
     fdmap.flags = 0;
 
-    int listen_port = 20001;
+    int listen_port = 0;
 	pthread_t ntid;
 
 	CPU_ZERO(&mask);
@@ -381,7 +378,7 @@ int main(void)
 			if(ev.events  & (EPOLLHUP|EPOLLERR)){
 				/*when net-peer close the socket by signal, 
 				  epoll will return both EPOLLIN and (EPOLLHUP|EPOLLERR) */
-                handle_recv_close(&fdmap);
+                handle_close(tmp_fd, epfd);
                 continue;              
             }
             if(tmp_fd == listen_fd){
@@ -456,6 +453,8 @@ int handle_msg(uint8_t *in_buf, uint8_t *out_buf)
     switch(header->cmd){
         case START_DAQ:
 
+            printf("start daq!\n");
+
             fd = Tspi_OpenDevice();
             if(fd < 0){		
                 printf("open failed!\n");
@@ -463,7 +462,7 @@ int handle_msg(uint8_t *in_buf, uint8_t *out_buf)
                 break;
             }
 
-            set_daq_paramter(fd, start_daq_op->packet_type, start_daq_op->daq_rate, start_daq_op->ch_en, start_daq_op->ch_cnt);
+            ret = set_daq_paramter(fd, start_daq_op->packet_type, start_daq_op->daq_rate, start_daq_op->ch_en, start_daq_op->ch_cnt);
 
             start_daq(fd);                 
 
@@ -473,7 +472,6 @@ int handle_msg(uint8_t *in_buf, uint8_t *out_buf)
 
             debug("启动采集\n");
 
-            ret = 0;
             break;
 
         case STOP_DAQ:

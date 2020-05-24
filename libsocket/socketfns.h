@@ -160,7 +160,15 @@ extern int create_listen_socket(int listen_addr, short listen_port);
  * @listen_fd           监听fd套接字 
  * @return              0:成功， -1:异常
  */
+
 extern int accept_new_connect(int listenfd);
+
+extern int tcp_read(int socket_fd, uint8_t *recv_buf, int *flags, int epfd);
+
+extern void tcp_write(int socket, uint8_t *send_buf, int data_len, int epfd);
+
+extern void handle_close(int socket_fd, int epfd);
+
 /** @} */
 #if defined(__cplusplus)
 }

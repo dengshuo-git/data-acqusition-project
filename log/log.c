@@ -18,7 +18,6 @@
 #include <math.h>
 #include <sys/errno.h>
 
-#include "log.h"
 #include "protocal.h"
 #include "port.h"
 #include "socketfns.h"

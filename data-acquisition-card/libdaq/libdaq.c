@@ -119,6 +119,8 @@ int set_daq_paramter(int dev_fd, uint32_t type, uint32_t rate, uint32_t ch_en, i
     uint8_t send[32] = {0};
     struct Set_Daq_Paramter_t * set_para = (struct Set_Daq_Paramter_t *)send;
 
+    if((rate == 0) || (ch_en == 0) || (ch_num == 0)) return -1;
+
     packet_type     =   type;
     daq_rate        =   rate;
 

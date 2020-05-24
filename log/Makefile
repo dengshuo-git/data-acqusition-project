@@ -12,7 +12,6 @@ all:$(TARGET)
 $(TARGET):log.c
 	$(CROSS_COMPILE)$(CC) log.c -g -lsocket -o log $(CCFLAGS) $(LDFLAGS) 
 	cp $(TARGET) ../bin
-	cp ./log.h ../include
 	
 clean:
 	rm -rf *.o  $(TARGET)

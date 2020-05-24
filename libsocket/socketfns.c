@@ -1,5 +1,6 @@
 /*************************************************
  *
+ *
  *  Copyright (C), 2013, CyberXingan
  *
  *  @file udpfns.c
@@ -40,8 +41,11 @@
 #include <time.h>
 #include <math.h>
 #include <sys/errno.h>
+#include <stddef.h>
 
 #include "socketfns.h"
+#include "protocal.h"
+
 #define IP_ADD_SOURCE_MEMBERSHIP    39
 #define IP_DROP_SOURCE_MEMBERSHIP   40
 #define MAXSEG                      1000
@@ -76,7 +80,7 @@ static void sig_funcs(int pid)
  *@param	addr  该套接字要绑定的IP地址
  *@param	port  端口
  *@return	0 :正常     -1:异常
- */
+ */#
 int UDPInitial_old(char *addr, int port)
 {
     int ret = 0;
@@ -704,3 +708,126 @@ int accept_new_connect(int listenfd)
 	return newfd;
 }
 
+void handle_close(int socket_fd, int epfd)
+{      
+	if(epfd > 0){
+        struct epoll_event ev;
+        ev.data.fd = socket_fd;
+        epoll_ctl(epfd, EPOLL_CTL_DEL, socket_fd, &ev);
+	}      
+
+	close(socket_fd);
+	return;
+}
+
+
+void tcp_write(int socket, uint8_t *send_buf, int data_len, int epfd)
+{
+	uint8_t *data = send_buf;
+	int packet_len = data_len;
+	int nbytes_write = 0;
+
+	while(1){
+		nbytes_write = send(socket, data, packet_len, 0);	
+		if(nbytes_write < 0){
+			if((errno == EAGAIN) || (errno == EWOULDBLOCK) || (errno == EINTR)) continue;
+
+            handle_close(socket, epfd);
+
+            return;
+		}
+
+		packet_len = packet_len - nbytes_write;
+		data += nbytes_write;
+
+		if(packet_len == 0) break;
+	}
+
+	return;
+
+}
+/*
+ * 网络接收函数，接受网络端来的报文；
+ */
+int tcp_read(int socket_fd, uint8_t *recv_buf, int *flags, int epfd)
+{
+    int ret;
+    struct Header_t header;
+    char *buffer = recv_buf;
+	struct epoll_event ev;
+
+    int rdStartByte = 0; 
+    int bytes2rd = 0; 
+
+    ret = recv(socket_fd , (char *)&header, sizeof(struct Header_t), MSG_PEEK);
+    if(ret < 0){
+        if((errno == EAGAIN) || (errno == EWOULDBLOCK) ||(errno == EINTR)){
+            return -1;
+        }
+
+        printf("Socket(fd = %d) recv error\n", socket_fd);
+        handle_close(socket_fd, epfd);
+
+        return -1;
+
+    }else if(ret == 0){
+
+        printf("Socket(fd = %d) recv close\n", socket_fd);
+        handle_close(socket_fd, epfd);
+
+        return -1;
+    }else{
+
+        if((size_t)ret < offsetof(struct Header_t, frame_len) + sizeof(header.frame_len)){
+            return -1;
+        }
+
+        bytes2rd =  header.frame_len;
+        if((bytes2rd > MAX_MSG_LEN) || (bytes2rd < sizeof(struct Header_t))){
+            return -1;
+        }
+
+        rdStartByte = 0; 
+        *flags |= SFLAG_RD_PART;
+
+    }
+
+	while(1){
+		ret = recv(socket_fd, buffer + rdStartByte, bytes2rd, 0);
+		if(ret < 0){
+			if((errno == EAGAIN) || (errno == EWOULDBLOCK) ||(errno == EINTR)){
+				return -1;
+			}
+
+			handle_close(socket_fd, epfd);
+
+			return -1;
+		}else if(ret == 0){
+
+			if(bytes2rd != 0){
+				printf("err\n");
+			    handle_close(socket_fd, epfd);
+
+				/*
+				 * 记录日志
+				 */
+
+				return -1;
+			}
+			else{
+				*flags &= ~SFLAG_RD_PART;
+				return 0;                        
+			}
+
+		}else{
+			rdStartByte += ret;
+			bytes2rd -= ret;
+		}
+
+		if( bytes2rd == 0){
+			*flags &= ~SFLAG_RD_PART;
+
+			return 0;      
+		}
+	}
+}

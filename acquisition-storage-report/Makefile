@@ -9,7 +9,7 @@ LDFLAGS += -L../lib
 
 all:$(TARGET)
 $(TARGET):acqusition_storage_report.c minIni.c
-	$(CROSS_COMPILE)$(CC) acqusition_storage_report.c minIni.c -g -lsocket -ldaq -lpthread -o  $(TARGET) $(CCFLAGS) $(LDFLAGS) 
+	$(CROSS_COMPILE)$(CC) acqusition_storage_report.c minIni.c -g -llog -lsocket -ldaq -lpthread -o  $(TARGET) $(CCFLAGS) $(LDFLAGS) 
 	cp $(TARGET) ../bin
 	
 clean:

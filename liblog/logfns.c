@@ -70,4 +70,8 @@ int write_log(char *log, int log_len)
 
     sendto(udpfd, data, write_log->header.frame_len, 0, (struct sockaddr*)&addr, sizeof(addr));
 
+    close(udpfd);
+
+    return 0;
+
 }
